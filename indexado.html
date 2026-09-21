@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso Especial - Chiwawa 🌟💛</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #050309;
+            min-height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Poppins', sans-serif;
+            color: #fff;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        .login-card {
+            position: relative;
+            z-index: 10;
+            background: rgba(30, 10, 50, 0.65);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            padding: 40px;
+            border-radius: 35px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8),
+                        0 0 50px rgba(138, 43, 226, 0.3);
+            text-align: center;
+            max-width: 420px;
+            width: 90%;
+            animation: cardEntrance 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        @keyframes cardEntrance {
+            from { opacity: 0; transform: translateY(30px) scale(0.9); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        h2 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.8rem;
+            color: #ffd700;
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+            margin-bottom: 10px;
+        }
+
+        p {
+            font-size: 0.95rem;
+            color: #f3e5f5;
+            margin-bottom: 25px;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        input[type="date"] {
+            width: 100%;
+            padding: 14px 20px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1.5px solid rgba(255, 215, 0, 0.4);
+            border-radius: 50px;
+            color: #fff;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            text-align: center;
+            outline: none;
+            transition: all 0.3s ease;
+            color-scheme: dark; /* Hace que el selector de fecha luzca oscuro y elegante */
+        }
+
+        input[type="date"]:focus {
+            border-color: #ffd700;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%);
+            border: none;
+            border-radius: 50px;
+            color: #110724;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(255, 215, 0, 0.4);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.6);
+        }
+
+        .error-msg {
+            color: #ff6b6b;
+            font-size: 0.85rem;
+            margin-top: 15px;
+            min-height: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="galaxyCanvas"></canvas>
+
+    <div class="login-card">
+        <h2>Hola, Chiwawa 💛</h2>
+        <p>Introduce la fecha especial para ver tu sorpresa:</p>
+        
+        <form id="loginForm">
+            <div class="input-group">
+                <!-- Selector de formato de fecha nativo del navegador -->
+                <input type="date" id="dateInput" required>
+            </div>
+            <button type="submit">Desbloquear Magia ✨</button>
+            <div id="errorMsg" class="error-msg">Fecha incorrecta, prueba otra vez 🥺</div>
+        </form>
+    </div>
+
+    <script>
+        // --- FONDO DE GALAXIA PARA EL LOGIN ---
+        const canvas = document.getElementById('galaxyCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let width, height;
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        const stars = [];
+        for (let i = 0; i < 400; i++) {
+            stars.push({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                size: Math.random() * 1.5,
+                speed: Math.random() * 0.03 + 0.01,
+                color: Math.random() > 0.8 ? '#ffeb3b' : '#ffffff'
+            });
+        }
+
+        function animateGalaxy() {
+            const bgGrad = ctx.createRadialGradient(width / 2, height / 2, 50, width / 2, height / 2, Math.max(width, height));
+            bgGrad.addColorStop(0, '#2d0c4f');
+            bgGrad.addColorStop(0.5, '#120524');
+            bgGrad.addColorStop(1, '#030107');
+            ctx.fillStyle = bgGrad;
+            ctx.fillRect(0, 0, width, height);
+
+            stars.forEach(star => {
+                star.y += star.speed;
+                if (star.y > height) star.y = 0;
+
+                ctx.beginPath();
+                ctx.fillStyle = star.color;
+                ctx.globalAlpha = Math.random() * 0.5 + 0.5;
+                ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            ctx.globalAlpha = 1.0;
+
+            requestAnimationFrame(animateGalaxy);
+        }
+        animateGalaxy();
+
+        // --- VALIDACIÓN DE CONTRASEÑA (17/05/2026) ---
+        const form = document.getElementById('loginForm');
+        const dateInput = document.getElementById('dateInput');
+        const errorMsg = document.getElementById('errorMsg');
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            // El input de tipo fecha devuelve el valor en formato estándar AAAA-MM-DD (2026-05-17)
+            const selectedDate = dateInput.value; 
+
+            if (selectedDate === '2026-05-17') {
+                // Contraseña correcta: redirige a la página del ramo de flores
+                window.location.href = 'flores.html';
+            } else {
+                // Mostrar mensaje de error con animación
+                errorMsg.style.opacity = '1';
+                setTimeout(() => {
+                    errorMsg.style.opacity = '0';
+                }, 3000);
+            }
+        });
+    </script>
+</body>
+</html>
